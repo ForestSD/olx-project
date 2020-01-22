@@ -26,6 +26,11 @@ public class MainClass {
 
 
         mainPage.headerSearch("Iphone 6S");
+        searchPage.priceTo("984");
+        searchPage.sortListAdvert("Частное");
+        searchPage.sortListByTheCriteria("Самые дешевые");
+        searchPage.sortListCurrency("€");
+        /*
         searchPage.waitAlertWindow();
         searchPage.checkBoxSearchInDescriptionTitle(true);
         searchPage.checkBoxSearchOnlyByPhoto(true);
@@ -37,6 +42,6 @@ public class MainClass {
         mainPage.listCategories("Детский Мир", "Игрушки");
         searchPage.checkBoxSearchByDelivery(true);
         searchPage.clickOnHeaderLogoMainPage();
-
+        */
     }
 }
