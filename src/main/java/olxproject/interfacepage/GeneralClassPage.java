@@ -2,8 +2,11 @@ package olxproject.interfacepage;
 
 import olxproject.pages.LoginPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
@@ -55,6 +58,53 @@ public abstract class GeneralClassPage {
     public void wholeCountry(){
         driver.findElement(searchArea).click();
         driver.findElement(wholeCountry).click();
+    }
+
+    protected void methodSort(String name, By list){
+        waitSecond(2.5);
+        List<WebElement> elements = driver.findElements(list);
+        for (WebElement element : elements) {
+            if(name.equalsIgnoreCase(element.getText())){
+                element.click();
+            }
+        }
+    }
+
+
+    protected void waitSecond(double seconds){
+        Double millisecond = seconds * 1000;
+        Integer millisecondInt = millisecond.intValue();
+        try {
+            Thread.sleep(millisecondInt);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void javascriptExecutorScrollPage(){
+        WebElement webElement = driver.findElement(By.xpath("//div[@class='pager rel clr']"));
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", webElement);
+    }
+
+    protected void visibilityElementOnPage(String selector){
+        WebDriverWait wait = new WebDriverWait(driver, 5, 200);
+        WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(selector)));
+        waitElement.click();
+    }
+
+    protected void pricingMethod(Integer price, String selectorButton, String selectorInput){
+        String stringPrice = price.toString();
+        WebElement element = driver.findElement(By.cssSelector(selectorButton));
+        element.click();
+        WebElement input = driver.findElement(By.cssSelector(selectorInput));
+        input.sendKeys(stringPrice);
+    }
+
+    protected void checkBoxSearch(boolean value, String selector){
+        if(value){
+            WebElement elementBox = driver.findElement(By.cssSelector(selector));
+            elementBox.click();
+        }
     }
 
 }

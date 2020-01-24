@@ -26,11 +26,10 @@ public class MainClass {
 
 
         mainPage.headerSearch("Iphone 6S");
-        searchPage.priceTo("984");
+        /*searchPage.priceTo("984");
         searchPage.sortListAdvert("Частное");
         searchPage.sortListByTheCriteria("Самые дешевые");
         searchPage.sortListCurrency("€");
-        /*
         searchPage.waitAlertWindow();
         searchPage.checkBoxSearchInDescriptionTitle(true);
         searchPage.checkBoxSearchOnlyByPhoto(true);

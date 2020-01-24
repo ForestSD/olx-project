@@ -6,8 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
@@ -20,23 +18,14 @@ public class SearchPage extends GeneralClassPage implements Methods {
         this.driver = driver;
     }
 
-
     private By fieldSearch = By.xpath("//input[@id='search-text']");
-
     private By categoriesHeading = By.xpath("//span[@class='block overh']");
-
     private By searchSubmit = By.xpath("//input[@id='search-submit']");
-
-    private By additionalSettings = By.xpath("//ul[contains(@class,'clr multifilters')]");
-
-
-    private By creteriaTop = By.xpath("//a[@id='cancelSearchCriteriaTop']//span[@class='link hn']");
-
-
     private By listAdvert = By.cssSelector(".sort-order-type li.fleft");
     private By listByTheCriteria = By.cssSelector(".sort-order-type li a.link");
     private By listCurrency = By.cssSelector(".view-currency li span");
-    private By listCate = By.xpath("//fieldset[@id='paramsList']");
+    private By listView = By.xpath("//ul[@id='viewSelector']//span");
+
 
     public void submitSearch() {
         driver.findElement(searchSubmit).click();
@@ -57,94 +46,88 @@ public class SearchPage extends GeneralClassPage implements Methods {
     }
 
     public void waitAlertWindow(){
-        WebDriverWait wait = new WebDriverWait(driver, 5, 200);
-        WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@id='geo-suggestions-close']")));
-        waitElement.click();
+        visibilityElementOnPage("a[id = 'geo-suggestions-close']");
     }
 
     public void checkBoxSearchInDescriptionTitle(boolean search){
-        if(search) {
-            WebElement elementBoxSearch = driver.findElement(By.xpath("//div[@class='checkboxsepa clr']//div[1]"));
-            elementBoxSearch.click();
-        }
+        checkBoxSearch(search,"div > label[for = title-desc]");
     }
 
     public void checkBoxSearchOnlyByPhoto(boolean photo){
-        if(photo){
-            WebElement elementBoxPhoto = driver.findElement(By.xpath("//div[@class='checkboxsepa clr']//div[2]"));
-            elementBoxPhoto.click();
-        }
+        checkBoxSearch(photo,"div > label[for = photo-only]");
     }
 
     public void checkBoxSearchByDelivery(boolean delivery){
-        if(delivery){
-            WebElement elementBoxDelivery = driver.findElement(By.xpath("//div[@class='checkboxsepa clr']//div[3]"));
-            elementBoxDelivery.click();
-        }
-
+        checkBoxSearch(delivery,"div > label[for = safedeal-only]");
     }
 
-    public void priceFrom(String price){
-        WebElement element = driver.findElement(By.xpath("//a[@class='button button-from numeric gray block fnormal rel zi3 clr']//span[@class='header block'][contains(text(),'.)')]"));
-        element.click();
-        WebElement input = driver.findElement(By.cssSelector(".filter-item-from input"));
-        input.sendKeys(price);
+    public void priceFrom(Integer price){
+        pricingMethod(price,".button-from",".filter-item-from input");
     }
 
-    public void priceTo(String price){
-        WebElement element = driver.findElement(By.xpath("//a[@class='button button-to numeric gray block fnormal rel zi3 clr']//span[@class='header block'][contains(text(),'.)')]"));
-        element.click();
-        WebElement input = driver.findElement(By.cssSelector(".filter-item-to input"));
-        input.sendKeys(price);
+    public void priceTo(Integer price){
+        pricingMethod(price,".button-to",".filter-item-to input");
     }
 
-    public void priceFromAndTo(String variablePriceFrom, String variablePriceTo){
+    public void priceFromAndTo(Integer variablePriceFrom, Integer variablePriceTo){
         this.priceFrom(variablePriceFrom);
         this.priceTo(variablePriceTo);
     }
 
-    /*
-    * Метод для определения от кого лица подалось объявление
+    /**
     * Все
     * Частное
     * Бизнес
-    * */
-    public void sortListAdvert(String nameAdvert){
+    **/
+    public void MethodForDeterminingFromWhomTheAdWasSubmitted(String nameAdvert){
         methodSort(nameAdvert, listAdvert);
     }
 
-    /*
-     * Метод для определения кретерий сортировки объявлений
+    /**
      * Самые новые
      * Самые дешевые
      * Самые дорогие
-     * */
-    public void sortListByTheCriteria(String nameCriteria){
+     **/
+    public void methodForDefiningSortingCriteria(String nameCriteria){
         methodSort(nameCriteria,listByTheCriteria);
     }
 
-    /*
-     * Метод для определения валюты
+    /**
      * грн
      * $
      * €
-     * */
-    public void sortListCurrency(String nameCurrency){
+     **/
+    public void methodForDeterminingTheCurrency(String nameCurrency){
         methodSort(nameCurrency, listCurrency);
     }
 
-    public void methodSort(String name, By list){
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        List<WebElement> elements = driver.findElements(list);
-        for (WebElement element : elements) {
-            if(name.equalsIgnoreCase(element.getText())){
-                element.click();
+    /**
+     * Список
+     * Галерея
+     **/
+    public void methodForDisplayingGoods(String nameView){
+        methodSort(nameView,listView);
+    }
+
+    public void viewAllProductsOnTheSearchPage(){
+        WebElement element = driver.findElement(By.cssSelector("a.x-normal span"));
+        element.click();
+    }
+
+    public void nextPage(Integer numberPage){
+        javascriptExecutorScrollPage();
+        waitSecond(3);
+        visibilityElementOnPage(".cookie-close");
+        List<WebElement> elementsPager = driver.findElements(By.cssSelector(".pager span"));
+        for (WebElement page : elementsPager) {
+            String text = page.getText();
+            String stringNumberPage = numberPage.toString();
+            if(stringNumberPage.equals(text)){
+                page.click();
+                break;
             }
         }
+
     }
 
 }
