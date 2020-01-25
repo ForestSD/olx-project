@@ -1,15 +1,15 @@
 package olxproject.pages;
 
-import olxproject.interfacepage.GeneralClassPage;
+import olxproject.interfacepage.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import olxproject.enumcategoris.CategoriesID;
+import olxproject.enumcategoris.CategoriesId;
 import olxproject.interfacepage.Methods;
 
 import java.util.List;
 
-public class MainPage extends GeneralClassPage implements Methods {
+public class MainPage extends BasePage implements Methods {
 
     private WebDriver driver;
 
@@ -63,8 +63,8 @@ public class MainPage extends GeneralClassPage implements Methods {
             String text = element.getText();
             if(text.equalsIgnoreCase(nameOfCategories)) {
                 element.click();
-                CategoriesID byName = CategoriesID.getByName(nameOfCategories);
-                pageLocator(byName.giveID(),locator);
+                CategoriesId byName = CategoriesId.getByName(nameOfCategories);
+                pageLocator(byName.giveId(),locator);
                 break;
             }
         }

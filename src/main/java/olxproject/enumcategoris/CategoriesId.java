@@ -3,7 +3,7 @@ package olxproject.enumcategoris;
 import java.util.Arrays;
 import java.util.List;
 
-public enum CategoriesID {
+public enum CategoriesId {
     childrenWorld("bottom36", Arrays.asList("Детский мир","Дитячий світ")),
     theProperty("bottom1", Arrays.asList("Недвижимость","Нерухомість")),
     transport("bottom1532", Arrays.asList("Транспорт","Транспорт")),
@@ -20,24 +20,24 @@ public enum CategoriesID {
     private String numberID;
     private List<String> name;
 
-    CategoriesID(String buttonID, List<String> name) {
+    CategoriesId(String buttonID, List<String> name) {
         this.numberID = buttonID;
         this.name = name;
     }
 
-    public String giveID(){
+    public String giveId(){
         return numberID;
     }
 
-    public static CategoriesID getByName(String name){
-        for (CategoriesID value : CategoriesID.values()) {
+    public static CategoriesId getByName(String name){
+        for (CategoriesId value : CategoriesId.values()) {
             for (String oneName : value.name){
                 if(oneName.equalsIgnoreCase(name)){
                     return value;
                 }
             }
         }
-        throw new IllegalArgumentException(name + "NOT FOUND");
+        throw new IllegalArgumentException(name + " NOT FOUND ");
     }
 
 }

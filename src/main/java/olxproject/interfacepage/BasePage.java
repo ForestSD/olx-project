@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public abstract class GeneralClassPage {
+public abstract class BasePage {
 
     private WebDriver driver;
 
@@ -22,7 +22,7 @@ public abstract class GeneralClassPage {
     private By searchArea = By.xpath("//input[@id='cityField']");
     private By wholeCountry = By.xpath("//a[@class='regionSelectA1']");
 
-    public GeneralClassPage(WebDriver driver) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -60,7 +60,7 @@ public abstract class GeneralClassPage {
         driver.findElement(wholeCountry).click();
     }
 
-    protected void methodSort(String name, By list){
+    protected void sortByNameList(String name, By list){
         waitSecond(2.5);
         List<WebElement> elements = driver.findElements(list);
         for (WebElement element : elements) {
@@ -81,7 +81,7 @@ public abstract class GeneralClassPage {
         }
     }
 
-    protected void javascriptExecutorScrollPage(){
+    protected void javaScriptExecutorScrollPage(){
         WebElement webElement = driver.findElement(By.xpath("//div[@class='pager rel clr']"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", webElement);
     }
@@ -92,7 +92,7 @@ public abstract class GeneralClassPage {
         waitElement.click();
     }
 
-    protected void pricingMethod(Integer price, String selectorButton, String selectorInput){
+    protected void pricing(Integer price, String selectorButton, String selectorInput){
         String stringPrice = price.toString();
         WebElement element = driver.findElement(By.cssSelector(selectorButton));
         element.click();

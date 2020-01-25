@@ -1,6 +1,6 @@
 package olxproject.pages;
 
-import olxproject.interfacepage.GeneralClassPage;
+import olxproject.interfacepage.BasePage;
 import olxproject.interfacepage.Methods;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import java.util.List;
 
 
-public class SearchPage extends GeneralClassPage implements Methods {
+public class SearchPage extends BasePage implements Methods {
     public WebDriver driver;
 
     public SearchPage(WebDriver driver) {
@@ -62,11 +62,11 @@ public class SearchPage extends GeneralClassPage implements Methods {
     }
 
     public void priceFrom(Integer price){
-        pricingMethod(price,".button-from",".filter-item-from input");
+        pricing(price,".button-from",".filter-item-from input");
     }
 
     public void priceTo(Integer price){
-        pricingMethod(price,".button-to",".filter-item-to input");
+        pricing(price,".button-to",".filter-item-to input");
     }
 
     public void priceFromAndTo(Integer variablePriceFrom, Integer variablePriceTo){
@@ -79,8 +79,8 @@ public class SearchPage extends GeneralClassPage implements Methods {
     * Частное
     * Бизнес
     **/
-    public void MethodForDeterminingFromWhomTheAdWasSubmitted(String nameAdvert){
-        methodSort(nameAdvert, listAdvert);
+    public void forDeterminingFromWhomTheAdWasSubmitted(String nameAdvert){
+        sortByNameList(nameAdvert, listAdvert);
     }
 
     /**
@@ -88,8 +88,8 @@ public class SearchPage extends GeneralClassPage implements Methods {
      * Самые дешевые
      * Самые дорогие
      **/
-    public void methodForDefiningSortingCriteria(String nameCriteria){
-        methodSort(nameCriteria,listByTheCriteria);
+    public void forDefiningSortingCriteria(String nameCriteria){
+        sortByNameList(nameCriteria,listByTheCriteria);
     }
 
     /**
@@ -97,8 +97,8 @@ public class SearchPage extends GeneralClassPage implements Methods {
      * $
      * €
      **/
-    public void methodForDeterminingTheCurrency(String nameCurrency){
-        methodSort(nameCurrency, listCurrency);
+    public void forDeterminingTheCurrency(String nameCurrency){
+        sortByNameList(nameCurrency, listCurrency);
     }
 
     /**
@@ -106,7 +106,7 @@ public class SearchPage extends GeneralClassPage implements Methods {
      * Галерея
      **/
     public void methodForDisplayingGoods(String nameView){
-        methodSort(nameView,listView);
+        sortByNameList(nameView,listView);
     }
 
     public void viewAllProductsOnTheSearchPage(){
@@ -115,7 +115,7 @@ public class SearchPage extends GeneralClassPage implements Methods {
     }
 
     public void nextPage(Integer numberPage){
-        javascriptExecutorScrollPage();
+        javaScriptExecutorScrollPage();
         waitSecond(3);
         visibilityElementOnPage(".cookie-close");
         List<WebElement> elementsPager = driver.findElements(By.cssSelector(".pager span"));
