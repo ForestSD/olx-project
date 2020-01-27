@@ -81,15 +81,49 @@ public abstract class BasePage {
         }
     }
 
+    public void pageLocator(String name, String locator){
+        String localCategoriesString = "//div[@id='%s']//ul//li//a";
+        List<WebElement> elements = driver.findElements(By.xpath(String.format(localCategoriesString, name)));
+        for (WebElement element : elements) {
+            String text = element.getText();
+            if(text.contains(locator)){
+                element.click();
+                break;
+            }
+        }
+    }
+
     protected void javaScriptExecutorScrollPage(){
         WebElement webElement = driver.findElement(By.xpath("//div[@class='pager rel clr']"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", webElement);
     }
 
-    protected void visibilityElementOnPage(String selector){
-        WebDriverWait wait = new WebDriverWait(driver, 5, 200);
-        WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(selector)));
-        waitElement.click();
+    protected void visibilityElementOnPageByCssSelector(String selectorCss){
+        waitSecond(1);
+        WebDriverWait wait = new WebDriverWait(driver, 3, 200);
+        WebElement element = driver.findElement(By.cssSelector(selectorCss));
+        if(element.isDisplayed()) {
+            WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(selectorCss)));
+            waitElement.click();
+        }else {
+            return;
+        }
+    }
+
+    protected void visibilityElementOnPageByXpathSelector(String selectorXpath){
+        waitSecond(1);
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 3, 200);
+            WebElement element = driver.findElement(By.xpath(selectorXpath));
+            if (element.isDisplayed()) {
+                WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(selectorXpath)));
+                waitElement.click();
+            } else {
+                driver.switchTo().activeElement();
+            }
+        }catch (Exception e){
+            e.getMessage();
+        }
     }
 
     protected void pricing(Integer price, String selectorButton, String selectorInput){
@@ -104,6 +138,16 @@ public abstract class BasePage {
         if(value){
             WebElement elementBox = driver.findElement(By.cssSelector(selector));
             elementBox.click();
+        }
+    }
+
+    protected void switchingPage(boolean nextOrPreviousPage, String selector){
+        if(nextOrPreviousPage) {
+            waitSecond(2);
+            javaScriptExecutorScrollPage();
+            waitSecond(1.5);
+            visibilityElementOnPageByCssSelector(".cookie-close");
+            driver.findElement(By.xpath(selector)).click();
         }
     }
 

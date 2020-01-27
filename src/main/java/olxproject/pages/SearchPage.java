@@ -45,8 +45,8 @@ public class SearchPage extends BasePage implements Methods {
         elementCategoryList.click();
     }
 
-    public void waitAlertWindow(){
-        visibilityElementOnPage("a[id = 'geo-suggestions-close']");
+    public void closeAlertWindowSearchPage(){
+        visibilityElementOnPageByCssSelector("#geo-suggestions-close");
     }
 
     public void checkBoxSearchInDescriptionTitle(boolean search){
@@ -114,10 +114,10 @@ public class SearchPage extends BasePage implements Methods {
         element.click();
     }
 
-    public void nextPage(Integer numberPage){
+    public void nextPageNumber(Integer numberPage){
         javaScriptExecutorScrollPage();
         waitSecond(3);
-        visibilityElementOnPage(".cookie-close");
+        visibilityElementOnPageByCssSelector(".cookie-close");
         List<WebElement> elementsPager = driver.findElements(By.cssSelector(".pager span"));
         for (WebElement page : elementsPager) {
             String text = page.getText();
@@ -130,5 +130,12 @@ public class SearchPage extends BasePage implements Methods {
 
     }
 
+    public void nextPageButton(boolean nextPage){
+        switchingPage(nextPage, "//a[@class='link pageNextPrev {page:2}']");
+    }
+
+    public void previousPageButton(boolean previousPage){
+        switchingPage(previousPage,"//span[contains(text(),'«')]");
+    }
 
 }

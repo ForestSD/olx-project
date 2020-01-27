@@ -28,14 +28,18 @@ public class MainPage extends BasePage implements Methods {
 
     private By mainCategories = By.xpath("//div[@class='maincategories']//div//div//a//span");
 
+    public void closeAlertWindow(){
+        this.visibilityElementOnPageByXpathSelector("//div[@class='gtm-survey__close js-gtm-survey-close']");
+    }
 
     public void headerSearch(String product){
-        driver.findElement(fieldSearch).sendKeys(product);
-        submitSearch();
+        WebElement element = driver.findElement(fieldSearch);
+        element.click();
+        element.sendKeys(product);
     }
 
     public void submitSearch(){
-        driver.findElement(buttonSearchMain).submit();
+        driver.findElement(buttonSearchMain).click();
 
     }
 
@@ -65,18 +69,6 @@ public class MainPage extends BasePage implements Methods {
                 element.click();
                 CategoriesId byName = CategoriesId.getByName(nameOfCategories);
                 pageLocator(byName.giveId(),locator);
-                break;
-            }
-        }
-    }
-
-    public void pageLocator(String name, String locator){
-        String localCategoriesString = "//div[@id='%s']//ul//li//a";
-        List<WebElement> elements = driver.findElements(By.xpath(String.format(localCategoriesString, name)));
-        for (WebElement element : elements) {
-            String text = element.getText();
-            if(text.contains(locator)){
-                element.click();
                 break;
             }
         }
