@@ -113,7 +113,7 @@ public abstract class BasePage {
     protected void visibilityElementOnPageByXpathSelector(String selectorXpath){
         waitSecond(1);
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 3, 200);
+            WebDriverWait wait = new WebDriverWait(driver, 2, 100);
             WebElement element = driver.findElement(By.xpath(selectorXpath));
             if (element.isDisplayed()) {
                 WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(selectorXpath)));

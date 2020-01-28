@@ -1,5 +1,6 @@
 package pages;
 
+import olxproject.pages.LoginPage;
 import olxproject.pages.MainPage;
 import olxproject.pages.SearchPage;
 import org.junit.After;
@@ -15,6 +16,7 @@ public class MainPageTest {
     private WebDriver driver;
     private MainPage mainPage;
     private SearchPage searchPage;
+    private LoginPage loginPage;
 
     @Before
     public void setUp(){
@@ -22,11 +24,12 @@ public class MainPageTest {
                 "C:\\Users\\Артем\\MavenTestENAndSeleniumWebDriver\\driver\\geckodriver.exe");
 
         driver = new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get("https://www.olx.ua/");
         mainPage = new MainPage(driver);
         searchPage = new SearchPage(driver);
+        loginPage = new LoginPage(driver);
     }
 
     @Test
@@ -47,23 +50,34 @@ public class MainPageTest {
         mainPage.choosingTheRightCity("Одесская","Одесса");
         mainPage.headerSearch("Велосипед");
         mainPage.submitSearch();
-        searchPage.checkBoxSearchOnlyByPhoto(true);
-        searchPage.nextPageButton(true);
         searchPage.clickOnHeaderLogoMainPage();
     }
 
     @Test
-    public void searchTransportAllCountry(){
+    public void searchTransportWholeCountry(){
         mainPage.clickOnHeaderLogoMainPage();
         mainPage.closeAlertWindow();
         mainPage.wholeCountry();
         mainPage.listCategories("Транспорт","Мото");
-        searchPage.closeAlertWindowSearchPage();
-        searchPage.checkBoxSearchByDelivery(true);
-        searchPage.forDefiningSortingCriteria("Самые дешевые");
-        searchPage.forDeterminingTheCurrency("$");
-        searchPage.nextPageNumber(7);
         searchPage.clickOnHeaderLogoMainPage();
+    }
+
+    @Test
+    public void searchTeddyBeerInKharkiv(){
+        mainPage.clickOnHeaderLogoMainPage();
+        mainPage.closeAlertWindow();
+        mainPage.specificCity("Харьков");
+        mainPage.headerSearch("Плюшевый медведь");
+        mainPage.submitSearch();
+        searchPage.clickOnHeaderLogoMainPage();
+    }
+
+    @Test
+    public void clickButtonInMyAccount(){
+        mainPage.clickOnHeaderLogoMainPage();
+        mainPage.closeAlertWindow();
+        mainPage.clickButtonMyProfile();
+        loginPage.clickOnHeaderLogoMainPage();
     }
 
     @After
