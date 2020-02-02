@@ -10,39 +10,33 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public abstract class BasePage {
+public abstract class BasePage extends Getters {
 
     private WebDriver driver;
-
-
-    private By headerLogo = By.xpath("//a[@id='headerLogo']");
-    private By buttonPostAn = By.xpath("//a[@id='postNewAdLink']//span");
-    private By myProfile = By.xpath("//span[@class='link inlblk']//strong");
-    private By languageOnPage = By.xpath("//ul[@class='breaklist inlblk']//li");
-    private By searchArea = By.xpath("//input[@id='cityField']");
-    private By wholeCountry = By.xpath("//a[@class='regionSelectA1']");
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 
+    private Getters getters = new Getters();
 
-    public void clickOnHeaderLogoMainPage(){
-        driver.findElement(headerLogo).click();
+
+    public void clickOnHeaderLogoPage(){
+        driver.findElement(getters.getHeaderLogoBasePage()).click();
     }
 
-    public LoginPage clickButtonPostAn(){
-        driver.findElement(buttonPostAn).click();
-        return new LoginPage(driver);
+    public void clickButtonPostAn(){
+        driver.findElement(getters.getButtonPostAnBasePage()).click();
+        new LoginPage(driver);
     }
 
-    public LoginPage clickButtonMyProfile(){
-        driver.findElement(myProfile).click();
-        return new LoginPage(driver);
+    public void clickButtonMyProfile(){
+        driver.findElement(getters.getMyProfileBasePage()).click();
+        new LoginPage(driver);
     }
 
     public void changeLanguage(String language){
-        List<WebElement> elements = driver.findElements(languageOnPage);
+        List<WebElement> elements = driver.findElements(getters.getLanguageOnBasePage());
         for (WebElement element : elements){
             String text = element.getText();
             if(text.equals(language)){
@@ -52,15 +46,15 @@ public abstract class BasePage {
     }
 
     public void specificCity(String location){
-        driver.findElement(searchArea).sendKeys(location);
+        driver.findElement(getters.getSearchAreaBasePage()).sendKeys(location);
     }
 
     public void wholeCountry(){
-        driver.findElement(searchArea).click();
-        driver.findElement(wholeCountry).click();
+        driver.findElement(getters.getSearchAreaBasePage()).click();
+        driver.findElement(getters.getWholeCountryBasePage()).click();
     }
 
-    protected void sortByNameList(String name, By list){
+    protected void sortListByName(String name, By list){
         waitSecond(2.5);
         List<WebElement> elements = driver.findElements(list);
         for (WebElement element : elements) {
@@ -81,9 +75,8 @@ public abstract class BasePage {
         }
     }
 
-    public void pageLocator(String name, String locator){
-        String localCategoriesString = "//div[@id='%s']//ul//li//a";
-        List<WebElement> elements = driver.findElements(By.xpath(String.format(localCategoriesString, name)));
+    protected void pageLocator(String name, String locator){
+        List<WebElement> elements = driver.findElements(By.xpath(String.format(getters.getLocalCategoriesString(), name)));
         for (WebElement element : elements) {
             String text = element.getText();
             if(text.contains(locator)){
@@ -94,61 +87,61 @@ public abstract class BasePage {
     }
 
     protected void javaScriptExecutorScrollPage(){
-        WebElement webElement = driver.findElement(By.xpath("//div[@class='pager rel clr']"));
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", webElement);
+        WebElement webElement = driver.findElement(getters.getDownElementOnPage());
+        ((JavascriptExecutor)driver).executeScript(getters.getScrollOnDownPage(), webElement);
     }
 
-    protected void visibilityElementOnPageByCssSelector(String selectorCss){
-        waitSecond(1);
-        WebDriverWait wait = new WebDriverWait(driver, 3, 200);
-        WebElement element = driver.findElement(By.cssSelector(selectorCss));
-        if(element.isDisplayed()) {
-            WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(selectorCss)));
-            waitElement.click();
-        }else {
-            return;
-        }
-    }
-
-    protected void visibilityElementOnPageByXpathSelector(String selectorXpath){
+    protected void visibilityElementOnPageBySelector(By selector){
         waitSecond(1);
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 2, 100);
-            WebElement element = driver.findElement(By.xpath(selectorXpath));
-            if (element.isDisplayed()) {
-                WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(selectorXpath)));
+            WebDriverWait wait = new WebDriverWait(driver, 3, 200);
+            WebElement element = driver.findElement(selector);
+            if(element.isDisplayed()) {
+                WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
                 waitElement.click();
-            } else {
-                driver.switchTo().activeElement();
+            }else {
+                return;
             }
         }catch (Exception e){
             e.getMessage();
         }
     }
 
-    protected void pricing(Integer price, String selectorButton, String selectorInput){
+    protected void pricing(Integer price, By selectorButton, By selectorInput){
         String stringPrice = price.toString();
-        WebElement element = driver.findElement(By.cssSelector(selectorButton));
-        element.click();
-        WebElement input = driver.findElement(By.cssSelector(selectorInput));
-        input.sendKeys(stringPrice);
+        clickElement(selectorButton);
+        sendKeysElement(selectorInput,stringPrice);
+
     }
 
-    protected void checkBoxSearch(boolean value, String selector){
+    protected void checkBoxSearch(boolean value, By selector){
         if(value){
-            WebElement elementBox = driver.findElement(By.cssSelector(selector));
-            elementBox.click();
+            clickElement(selector);
         }
     }
 
-    protected void switchingPage(boolean nextOrPreviousPage, String selector){
+    protected void switchingPage(boolean nextOrPreviousPage, By selector){
         if(nextOrPreviousPage) {
             waitSecond(2);
             javaScriptExecutorScrollPage();
             waitSecond(1.5);
-            visibilityElementOnPageByCssSelector(".cookie-close");
-            driver.findElement(By.xpath(selector)).click();
+            visibilityElementOnPageBySelector(getters.getBoxCloseCookieWindowSearchPage());
+            this.clickElement(selector);
         }
     }
 
+    private void clickElement(By selector){
+        driver.findElement(selector).click();
+    }
+
+    private WebElement findElementBy(By selector){
+        return driver.findElement(selector);
+    }
+
+    private void sendKeysElement(By selector, String key){
+        driver.findElement(selector).sendKeys(key);
+    }
+
+    //TODO
+    /*Сделать методы FOR TEXT они повторяються*/
 }

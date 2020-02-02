@@ -1,8 +1,10 @@
 package pages;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import olxproject.pages.SearchPage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -14,11 +16,13 @@ public class SearchPageTest {
     private WebDriver driver;
     private SearchPage searchPage;
 
+    @BeforeClass
+    public static void setupClass() {
+        WebDriverManager.firefoxdriver().setup();
+    }
+
     @Before
     public void setUp(){
-        System.setProperty("webdriver.gecko.driver",
-                "C:\\Users\\Артем\\MavenTestENAndSeleniumWebDriver\\driver\\geckodriver.exe");
-
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.manage().window().maximize();

@@ -1,7 +1,9 @@
 package olxproject.pages;
 
 import olxproject.interfacepage.BasePage;
+import olxproject.interfacepage.Getters;
 import olxproject.interfacepage.Methods;
+import olxproject.interfacepage.OlxManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,62 +13,56 @@ import java.util.List;
 
 
 public class SearchPage extends BasePage implements Methods {
-    public WebDriver driver;
+
+    private WebDriver driver;
+    private OlxManager manager;
 
     public SearchPage(WebDriver driver) {
         super(driver);
         this.driver = driver;
     }
 
-    private By fieldSearch = By.xpath("//input[@id='search-text']");
-    private By categoriesHeading = By.xpath("//span[@class='block overh']");
-    private By searchSubmit = By.xpath("//input[@id='search-submit']");
-    private By listAdvert = By.cssSelector(".sort-order-type li.fleft");
-    private By listByTheCriteria = By.cssSelector(".sort-order-type li a.link");
-    private By listCurrency = By.cssSelector(".view-currency li span");
-    private By listView = By.xpath("//ul[@id='viewSelector']//span");
+    private Getters getters = new Getters();
 
 
     public void submitSearch() {
-        driver.findElement(searchSubmit).click();
+        driver.findElement(getters.getSubmitSearchPage()).click();
     }
 
     public void headerSearch(String product) {
-        driver.findElement(fieldSearch).sendKeys(product);
+        driver.findElement(getters.getFieldSearchOnSearchPage()).sendKeys(product);
         submitSearch();
     }
 
     public void checkHeading(String nameCategoryOnList){
         Actions actions = new Actions(driver);
-        actions.moveToElement(driver.findElement(categoriesHeading)).click().perform();
-        //driver.findElement(categoriesHeading).click();
-        String locator = "//ul[@id='categorySelectList']//a[contains(text(),'%s')]";
-        WebElement elementCategoryList = driver.findElement(By.xpath(String.format(locator,nameCategoryOnList)));
+        actions.moveToElement(driver.findElement(getters.getCategoriesHeadingSearchPage())).click().perform();
+        WebElement elementCategoryList = driver.findElement(By.xpath(String.format(getters.getLocatorCheckHeading(),nameCategoryOnList)));
         elementCategoryList.click();
     }
 
     public void closeAlertWindowSearchPage(){
-        visibilityElementOnPageByCssSelector("#geo-suggestions-close");
+        visibilityElementOnPageBySelector(getters.getBoxCloseAlertWindowSearchPage());
     }
 
     public void checkBoxSearchInDescriptionTitle(boolean search){
-        checkBoxSearch(search,"div > label[for = title-desc]");
+        checkBoxSearch(search,getters.getOnlyDescriptionTitleSearchPage());
     }
 
     public void checkBoxSearchOnlyByPhoto(boolean photo){
-        checkBoxSearch(photo,"div > label[for = photo-only]");
+        checkBoxSearch(photo,getters.getOnlyPhotoSearchPage());
     }
 
     public void checkBoxSearchByDelivery(boolean delivery){
-        checkBoxSearch(delivery,"div > label[for = safedeal-only]");
+        checkBoxSearch(delivery,getters.getOnlyDeliverySearchPage());
     }
 
-    public void priceFrom(Integer price){
-        pricing(price,".button-from",".filter-item-from input");
+    private void priceFrom(Integer price){
+        pricing(price,getters.getButtonFromPriceSearchPage(),getters.getInputFromPriceSearchPage());
     }
 
-    public void priceTo(Integer price){
-        pricing(price,".button-to",".filter-item-to input");
+    private void priceTo(Integer price){
+        pricing(price,getters.getButtonToPriceSearchPage(), getters.getInputToPriceSearchPage());
     }
 
     public void priceFromAndTo(Integer variablePriceFrom, Integer variablePriceTo){
@@ -80,7 +76,7 @@ public class SearchPage extends BasePage implements Methods {
     * Бизнес
     **/
     public void forDeterminingFromWhomTheAdWasSubmitted(String nameAdvert){
-        sortByNameList(nameAdvert, listAdvert);
+        sortListByName(nameAdvert, getters.getListAdvertSearchPage());
     }
 
     /**
@@ -89,7 +85,7 @@ public class SearchPage extends BasePage implements Methods {
      * Самые дорогие
      **/
     public void forDefiningSortingCriteria(String nameCriteria){
-        sortByNameList(nameCriteria,listByTheCriteria);
+        sortListByName(nameCriteria,getters.getListByTheCriteriaSearchPage());
     }
 
     /**
@@ -98,7 +94,7 @@ public class SearchPage extends BasePage implements Methods {
      * €
      **/
     public void forDeterminingTheCurrency(String nameCurrency){
-        sortByNameList(nameCurrency, listCurrency);
+        sortListByName(nameCurrency, getters.getListCurrencySearchPage());
     }
 
     /**
@@ -106,36 +102,22 @@ public class SearchPage extends BasePage implements Methods {
      * Галерея
      **/
     public void methodForDisplayingGoods(String nameView){
-        sortByNameList(nameView,listView);
+        sortListByName(nameView,getters.getListViewSearchPage());
     }
 
     public void viewAllProductsOnTheSearchPage(){
-        WebElement element = driver.findElement(By.cssSelector("a.x-normal span"));
+        WebElement element = driver.findElement(getters.getViewAllProductSearchPage());
         element.click();
     }
 
-    public void nextPageNumber(Integer numberPage){
-        javaScriptExecutorScrollPage();
-        waitSecond(3);
-        visibilityElementOnPageByCssSelector(".cookie-close");
-        List<WebElement> elementsPager = driver.findElements(By.cssSelector(".pager span"));
-        for (WebElement page : elementsPager) {
-            String text = page.getText();
-            String stringNumberPage = numberPage.toString();
-            if(stringNumberPage.equals(text)){
-                page.click();
-                break;
-            }
-        }
 
-    }
 
     public void nextPageButton(boolean nextPage){
-        switchingPage(nextPage, "//a[@class='link pageNextPrev {page:2}']");
+        switchingPage(nextPage, getters.getNextButtonSearchPage());
     }
 
     public void previousPageButton(boolean previousPage){
-        switchingPage(previousPage,"//span[contains(text(),'«')]");
+        switchingPage(previousPage,getters.getPreviousButtonSearchPage());
     }
 
 }

@@ -1,0 +1,55 @@
+theProperty:
+  button-name: bottom1
+  names:
+  - Недвижимость
+  - Нерухомість
+childrenWorld:
+  button-name: bottom36
+  names:
+  - Детский мир
+  - Дитячий світ
+transport:
+  button-name: bottom1532
+  names:
+  - Транспорт
+  - Транспорт
+spares:
+  button-name: bottom3
+  names:
+  - Запчасти для транспорта
+  - Запчастини для транспорту
+work:
+  button-name: bottom6
+  names:
+  - Работа
+  - Робота
+animal:
+  button-name: bottom35
+  names:
+  - Животные
+  - Тварини
+homeAndGarden:
+  button-name: bottom899
+  names:
+  - Дом и сад
+  - Дім і сад
+electronic:
+  button-name: bottom37
+  names:
+  - Электроника
+  - Електроніка
+business:
+  button-name: bottom7
+  names:
+  - Бизнес и услуги
+  - Бізнес та послуги
+fashion:
+  button-name: bottom891
+  names:
+  - Мода и стиль
+  - Мода і стиль
+hobby:
+  button-name: bottom903
+  names:
+  - Хобби отдых и спорт
+  - Хобі відпочинок і спорт
