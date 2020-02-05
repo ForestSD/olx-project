@@ -8,7 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
-public class OlxManager extends BasePage {
+public class OlxManager extends BasePage implements Methods {
     private WebDriver driver;
 
     public OlxManager(WebDriver driver) {
@@ -16,13 +16,14 @@ public class OlxManager extends BasePage {
     }
 
     private Getters getters = new Getters();
+    private BasePage basePage;
 
     public void closeAlertWindowMainPage(){
         this.visibilityElementOnPageBySelector(getters.getAlertElementCloseWindowMainPage());
     }
 
     public void headerSearchMainPage(String product){
-        WebElement element = driver.findElement(getters.getFieldSearchMainPage());
+        WebElement element = basePage.findElementBy(getters.getFieldSearchMainPage());
         element.click();
         element.sendKeys(product);
         this.submitSearchMainPage();
@@ -51,11 +52,11 @@ public class OlxManager extends BasePage {
     }
 
     public void submitSearchOnSearchPage() {
-        driver.findElement(getters.getSubmitSearchPage()).click();
+        basePage.clickElement(getters.getSubmitSearchPage());
     }
 
     public void headerSearchOnSearchPage(String product) {
-        driver.findElement(getters.getFieldSearchOnSearchPage()).sendKeys(product);
+        basePage.sendKeysElement(getters.getFieldSearchOnSearchPage(),product);
         submitSearchOnSearchPage();
     }
 
@@ -126,13 +127,12 @@ public class OlxManager extends BasePage {
      * Список
      * Галерея
      **/
-    public void methodForDisplayingGoodsSearchPage(String nameView){
+    public void forDisplayingGoodsSearchPage(String nameView){
         sortListByName(nameView,getters.getListViewSearchPage());
     }
 
     public void viewAllProductsOnTheSearchPage(){
-        WebElement element = driver.findElement(getters.getViewAllProductSearchPage());
-        element.click();
+        basePage.clickElement(getters.getViewAllProductSearchPage());
     }
 
     public void nextPageNumberOnSearchPage(Integer numberPage){
@@ -160,27 +160,38 @@ public class OlxManager extends BasePage {
     }
 
     public void tabToEntrance(String userEmailOrNumberPhone, String userPass){
-        driver.findElement(getters.getTabEntranceLoginPage()).click();
-        driver.findElement(getters.getFieldUserEmailLogin()).sendKeys(userEmailOrNumberPhone);
-        driver.findElement(getters.getFieldUserPassLogin()).click();
-        driver.findElement(getters.getFieldUserPassLogin()).sendKeys(userPass);
-        driver.findElement(getters.getButtonSubmitEntranceLogin()).submit();
+        basePage.clickElement(getters.getTabEntranceLoginPage());
+        basePage.sendKeysElement(getters.getFieldUserEmailLogin(), userEmailOrNumberPhone);
+        basePage.clickElement(getters.getFieldUserPassLogin());
+        basePage.sendKeysElement(getters.getFieldUserPassLogin(),userPass);
+        basePage.submitElement(getters.getButtonSubmitEntranceLogin());
     }
 
     public void tabToRegister(String userEmailOrNumberPhone){
-        driver.findElement(getters.getTabRegisterLoginPage()).click();
-        driver.findElement(getters.getFieldUserEmailPhoneRegister()).sendKeys(userEmailOrNumberPhone);
-        driver.findElement(getters.getCheckBoxArgumentRegister()).click();
-        driver.findElement(getters.getButtonSubmitRegister()).submit();
+        basePage.clickElement(getters.getTabRegisterLoginPage());
+        basePage.sendKeysElement(getters.getFieldUserEmailPhoneRegister(),userEmailOrNumberPhone);
+        basePage.clickElement(getters.getCheckBoxArgumentRegister());
+        basePage.submitElement(getters.getButtonSubmitRegister());
     }
 
     public void tabToEntranceFacebookLogin(){
-        driver.findElement(getters.getTabEntranceLoginPage()).click();
-        driver.findElement(getters.getTabEntranceFacebookLogin()).click();
+        basePage.clickElement(getters.getTabEntranceLoginPage());
+        basePage.clickElement(getters.getTabEntranceFacebookLogin());
     }
 
     public void tabToEntranceFacebookRegister(){
-        driver.findElement(getters.getTabRegisterLoginPage()).click();
-        driver.findElement(getters.getTabEntranceFacebookRegister()).click();
+        basePage.clickElement(getters.getTabRegisterLoginPage());
+        basePage.clickElement(getters.getTabEntranceFacebookRegister());
+    }
+
+    @Override
+    public void headerSearch(String product) {
+        driver.findElement(getters.getFieldSearchOnSearchPage()).sendKeys(product);
+        submitSearch();
+    }
+
+    @Override
+    public void submitSearch() {
+        driver.findElement(getters.getSubmitSearchPage()).click();
     }
 }

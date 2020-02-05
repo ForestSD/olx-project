@@ -1,18 +1,11 @@
 package olxproject.pages;
 
 import olxproject.interfacepage.BasePage;
-import olxproject.interfacepage.Getters;
-import olxproject.interfacepage.Methods;
 import olxproject.interfacepage.OlxManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
-import java.util.List;
 
 
-public class SearchPage extends BasePage implements Methods {
+public class SearchPage extends BasePage {
 
     private WebDriver driver;
     private OlxManager manager;
@@ -22,102 +15,27 @@ public class SearchPage extends BasePage implements Methods {
         this.driver = driver;
     }
 
-    private Getters getters = new Getters();
-
-
-    public void submitSearch() {
-        driver.findElement(getters.getSubmitSearchPage()).click();
+    private void searchProductAndCheckingCheckBox(String product){
+        manager.headerSearch(product);
+        manager.closeAlertWindowSearchPage();
     }
 
-    public void headerSearch(String product) {
-        driver.findElement(getters.getFieldSearchOnSearchPage()).sendKeys(product);
-        submitSearch();
+    private void checkBoxActivate(boolean delivery,boolean descriptionTitle, boolean photo){
+        manager.checkBoxSearchByDeliverySearchPage(delivery);
+        manager.checkBoxSearchInDescriptionTitleSearchPage(descriptionTitle);
+        manager.checkBoxSearchOnlyByPhotoSearchPage(photo);
     }
 
-    public void checkHeading(String nameCategoryOnList){
-        Actions actions = new Actions(driver);
-        actions.moveToElement(driver.findElement(getters.getCategoriesHeadingSearchPage())).click().perform();
-        WebElement elementCategoryList = driver.findElement(By.xpath(String.format(getters.getLocatorCheckHeading(),nameCategoryOnList)));
-        elementCategoryList.click();
+    private void additionalSettings(String criteria, String nameAdvert, String nameCurrency, String nameView){
+        manager.forDefiningSortingCriteriaSearchPage(criteria);
+        manager.forDeterminingFromWhomTheAdWasSubmittedSearchPage(nameAdvert);
+        manager.forDeterminingTheCurrencySearchPage(nameCurrency);
+        manager.forDisplayingGoodsSearchPage(nameView);
     }
 
-    public void closeAlertWindowSearchPage(){
-        visibilityElementOnPageBySelector(getters.getBoxCloseAlertWindowSearchPage());
+    private void buttonAndNumberPage(boolean nextButton, boolean previousButton, Integer numberButton){
+        manager.nextPageButtonOnSearchPage(nextButton);
+        manager.previousPageButtonOnSearchPage(previousButton);
+        manager.nextPageNumberOnSearchPage(numberButton);
     }
-
-    public void checkBoxSearchInDescriptionTitle(boolean search){
-        checkBoxSearch(search,getters.getOnlyDescriptionTitleSearchPage());
-    }
-
-    public void checkBoxSearchOnlyByPhoto(boolean photo){
-        checkBoxSearch(photo,getters.getOnlyPhotoSearchPage());
-    }
-
-    public void checkBoxSearchByDelivery(boolean delivery){
-        checkBoxSearch(delivery,getters.getOnlyDeliverySearchPage());
-    }
-
-    private void priceFrom(Integer price){
-        pricing(price,getters.getButtonFromPriceSearchPage(),getters.getInputFromPriceSearchPage());
-    }
-
-    private void priceTo(Integer price){
-        pricing(price,getters.getButtonToPriceSearchPage(), getters.getInputToPriceSearchPage());
-    }
-
-    public void priceFromAndTo(Integer variablePriceFrom, Integer variablePriceTo){
-        this.priceFrom(variablePriceFrom);
-        this.priceTo(variablePriceTo);
-    }
-
-    /**
-    * Все
-    * Частное
-    * Бизнес
-    **/
-    public void forDeterminingFromWhomTheAdWasSubmitted(String nameAdvert){
-        sortListByName(nameAdvert, getters.getListAdvertSearchPage());
-    }
-
-    /**
-     * Самые новые
-     * Самые дешевые
-     * Самые дорогие
-     **/
-    public void forDefiningSortingCriteria(String nameCriteria){
-        sortListByName(nameCriteria,getters.getListByTheCriteriaSearchPage());
-    }
-
-    /**
-     * грн
-     * $
-     * €
-     **/
-    public void forDeterminingTheCurrency(String nameCurrency){
-        sortListByName(nameCurrency, getters.getListCurrencySearchPage());
-    }
-
-    /**
-     * Список
-     * Галерея
-     **/
-    public void methodForDisplayingGoods(String nameView){
-        sortListByName(nameView,getters.getListViewSearchPage());
-    }
-
-    public void viewAllProductsOnTheSearchPage(){
-        WebElement element = driver.findElement(getters.getViewAllProductSearchPage());
-        element.click();
-    }
-
-
-
-    public void nextPageButton(boolean nextPage){
-        switchingPage(nextPage, getters.getNextButtonSearchPage());
-    }
-
-    public void previousPageButton(boolean previousPage){
-        switchingPage(previousPage,getters.getPreviousButtonSearchPage());
-    }
-
 }

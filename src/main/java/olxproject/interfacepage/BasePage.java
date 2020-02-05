@@ -22,45 +22,40 @@ public abstract class BasePage extends Getters {
 
 
     public void clickOnHeaderLogoPage(){
-        driver.findElement(getters.getHeaderLogoBasePage()).click();
+        clickElement(getters.getHeaderLogoBasePage());
     }
 
     public void clickButtonPostAn(){
-        driver.findElement(getters.getButtonPostAnBasePage()).click();
+        clickElement(getters.getButtonPostAnBasePage());
         new LoginPage(driver);
     }
 
     public void clickButtonMyProfile(){
-        driver.findElement(getters.getMyProfileBasePage()).click();
+        clickElement(getters.getMyProfileBasePage());
         new LoginPage(driver);
     }
 
     public void changeLanguage(String language){
         List<WebElement> elements = driver.findElements(getters.getLanguageOnBasePage());
-        for (WebElement element : elements){
-            String text = element.getText();
-            if(text.equals(language)){
-                element.click();
-            }
-        }
+        iterateElement(elements,language);
     }
 
     public void specificCity(String location){
-        driver.findElement(getters.getSearchAreaBasePage()).sendKeys(location);
+        sendKeysElement(getters.getSearchAreaBasePage(),location);
     }
 
     public void wholeCountry(){
-        driver.findElement(getters.getSearchAreaBasePage()).click();
-        driver.findElement(getters.getWholeCountryBasePage()).click();
+        clickElement(getters.getSearchAreaBasePage());
+        clickElement(getters.getWholeCountryBasePage());
     }
 
     protected void sortListByName(String name, By list){
-        waitSecond(2.5);
-        List<WebElement> elements = driver.findElements(list);
-        for (WebElement element : elements) {
-            if(name.equalsIgnoreCase(element.getText())){
-                element.click();
-            }
+        try {
+            waitSecond(2.5);
+            List<WebElement> elements = driver.findElements(list);
+            iterateElement(elements,name);
+        }catch (Exception e){
+
         }
     }
 
@@ -77,17 +72,11 @@ public abstract class BasePage extends Getters {
 
     protected void pageLocator(String name, String locator){
         List<WebElement> elements = driver.findElements(By.xpath(String.format(getters.getLocalCategoriesString(), name)));
-        for (WebElement element : elements) {
-            String text = element.getText();
-            if(text.contains(locator)){
-                element.click();
-                break;
-            }
-        }
+        iterateElement(elements,locator);
     }
 
     protected void javaScriptExecutorScrollPage(){
-        WebElement webElement = driver.findElement(getters.getDownElementOnPage());
+        WebElement webElement = findElementBy(getters.getDownElementOnPage());
         ((JavascriptExecutor)driver).executeScript(getters.getScrollOnDownPage(), webElement);
     }
 
@@ -95,7 +84,7 @@ public abstract class BasePage extends Getters {
         waitSecond(1);
         try {
             WebDriverWait wait = new WebDriverWait(driver, 3, 200);
-            WebElement element = driver.findElement(selector);
+            WebElement element = findElementBy(selector);
             if(element.isDisplayed()) {
                 WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
                 waitElement.click();
@@ -115,33 +104,51 @@ public abstract class BasePage extends Getters {
     }
 
     protected void checkBoxSearch(boolean value, By selector){
-        if(value){
-            clickElement(selector);
+        try {
+            if(value){
+                clickElement(selector);
+            }
+        }catch (Exception e){
+
         }
     }
 
     protected void switchingPage(boolean nextOrPreviousPage, By selector){
-        if(nextOrPreviousPage) {
-            waitSecond(2);
-            javaScriptExecutorScrollPage();
-            waitSecond(1.5);
-            visibilityElementOnPageBySelector(getters.getBoxCloseCookieWindowSearchPage());
-            this.clickElement(selector);
+        try {
+
+            if (nextOrPreviousPage) {
+                waitSecond(2);
+                javaScriptExecutorScrollPage();
+                waitSecond(1.5);
+                visibilityElementOnPageBySelector(getters.getBoxCloseCookieWindowSearchPage());
+                this.clickElement(selector);
+            }
+        }catch (Exception e){
+
         }
     }
 
-    private void clickElement(By selector){
+    private void iterateElement(List<WebElement> elements, String locator){
+        for (WebElement element : elements) {
+            String text = element.getText();
+            if(text.equalsIgnoreCase(locator)){
+                element.click();
+                break;
+            }
+        }
+    }
+
+    protected void clickElement(By selector){
         driver.findElement(selector).click();
     }
 
-    private WebElement findElementBy(By selector){
+    protected WebElement findElementBy(By selector){
         return driver.findElement(selector);
     }
 
-    private void sendKeysElement(By selector, String key){
+    protected void sendKeysElement(By selector, String key){
         driver.findElement(selector).sendKeys(key);
     }
 
-    //TODO
-    /*Сделать методы FOR TEXT они повторяються*/
+    protected void submitElement(By selector){ driver.findElement(selector).submit();}
 }
