@@ -1,42 +1,46 @@
 package olxproject.pages;
 
-import olxproject.interfacepage.OlxManager;
+import olxproject.enumcategoris.CategoriesId;
+import olxproject.interfacepage.BasePage;
+import olxproject.interfacepage.Getters;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
-public class MainPage extends OlxManager {
+import java.util.List;
 
-    private OlxManager manager;
+public class MainPage extends BasePage {
 
-    public MainPage(WebDriver driver, OlxManager manager) {
+    public WebDriver driver;
+
+
+    public MainPage(WebDriver driver) {
         super(driver);
-        this.manager = manager;
+        this.driver = driver;
     }
 
 
-    private void serchProductByCity(String city,String product){
-        manager.checkForAlert();
-        manager.specificCity(city);
-        manager.headerSearchMainPage(product);
+    public void headerSearchMainPage(String product){
+        WebElement element = findElementBy(Getters.getFieldSearchMainPage());
+        element.click();
+        element.sendKeys(product);
     }
 
-    private void serchProductWholeCountry(String product){
-        manager.checkForAlert();
-        manager.wholeCountry();
-        manager.headerSearchMainPage(product);
+    public void submitSearchMainPage(){
+        clickElement(Getters.getButtonSearchMainMainPage());
     }
 
-    private void enterOnLoginPage(){
-        manager.clickButtonPostAn();
+    public void listCategoriesOnMainPage(String nameOfCategories, String locator){
+        List<WebElement> elements = driver.findElements(Getters.getMainCategoriesMainPage());
+        for (WebElement element : elements){
+            String text = element.getText();
+            if(text.equalsIgnoreCase(nameOfCategories)) {
+                element.click();
+                CategoriesId byName = CategoriesId.getByName(nameOfCategories);
+                pageLocator(byName.giveId(),locator);
+                break;
+            }
+        }
     }
-
-    private void serchProductByCategoris(String categorie, String subCategorie){
-        manager.listCategoriesOnMainPage(categorie, subCategorie);
-    }
-
-    private void chengeLanguageOnPage(String lang){
-        manager.changeLanguage(lang);
-    }
-
 
 
 }

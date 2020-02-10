@@ -1,11 +1,9 @@
 package pages;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import olxproject.interfacepage.Getters;
 import olxproject.pages.LoginPage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -13,27 +11,32 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginPageTest {
 
-    private WebDriver driver;
-    private LoginPage loginPage;
+    public WebDriver driver;
+    public LoginPage loginPage;
+    public WebDriverManager firefoxdriver;
+
 
     @BeforeClass
     public static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
+        WebDriverManager.firefoxdriver();
     }
 
     @Before
     public void setUp(){
+        firefoxdriver = WebDriverManager.firefoxdriver();
+        firefoxdriver.clearCache();
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get("https://www.olx.ua/account/");
-        loginPage = new LoginPage(driver, manager);
+        loginPage = new LoginPage(driver);
     }
 
     @Test
     public void registerNewUser(){
-        loginPage.tabToRegister("380973348234");
-        loginPage.clickOnHeaderLogoMainPage();
+        loginPage.tabToEntrance("Name","3784hdkrue");
+        String text = loginPage.getText(Getters.getTabEntranceLoginPage());
+        Assert.assertEquals("Войти", text);
     }
 
     @Test
@@ -51,12 +54,6 @@ public class LoginPageTest {
         loginPage.tabToEntranceFacebookRegister();
     }
 
-    @Test
-    public void testAll(){
-        loginPage.tabToEntrance("380937462822","736649cfhe");
-        loginPage.tabToRegister("380973348234");
-        loginPage.tabToEntranceFacebookRegister();
-    }
 
     @After
     public void testDown(){

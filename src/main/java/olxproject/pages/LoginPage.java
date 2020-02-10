@@ -1,30 +1,45 @@
 package olxproject.pages;
 
-import olxproject.interfacepage.OlxManager;
+import olxproject.interfacepage.BasePage;
+import olxproject.interfacepage.Getters;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class LoginPage extends OlxManager {
+public class LoginPage {
 
-    private OlxManager manager;
+
+    public WebDriver driver;
 
     public LoginPage(WebDriver driver) {
-        super(driver);
+        this.driver = driver;
     }
 
-
-    private void enterByLogin(String user, String pass ){
-        manager.tabToEntrance(user, pass);
+    public void tabToEntrance(String userEmailOrNumberPhone, String userPass){
+        driver.findElement(Getters.getTabEntranceLoginPage()).click();
+        driver.findElement(Getters.getFieldUserEmailLogin()).sendKeys(userEmailOrNumberPhone);
+        driver.findElement(Getters.getFieldUserPassLogin()).click();
+        driver.findElement(Getters.getFieldUserPassLogin()).sendKeys(userPass);
+        driver.findElement(Getters.getButtonSubmitEntranceLogin()).submit();
     }
 
-    private void enterByRegister(String phoneOrEmail){
-        manager.tabToRegister(phoneOrEmail);
+    public void tabToRegister(String userEmailOrNumberPhone){
+        driver.findElement(Getters.getTabRegisterLoginPage()).click();
+        driver.findElement(Getters.getFieldUserEmailPhoneRegister()).sendKeys(userEmailOrNumberPhone);
+        driver.findElement(Getters.getCheckBoxArgumentRegister()).click();
+        driver.findElement(Getters.getButtonSubmitRegister()).submit();
     }
 
-    private void enterByLoginFaceBook(){
-        manager.tabToEntranceFacebookLogin();
+    public void tabToEntranceFacebookLogin(){
+        driver.findElement(Getters.getTabEntranceLoginPage()).click();
+        driver.findElement(Getters.getTabEntranceFacebookLogin()).click();
     }
 
-    private void enterByRegisterFaceBook(){
-        manager.tabToEntranceFacebookRegister();
+    public void tabToEntranceFacebookRegister(){
+        driver.findElement(Getters.getTabRegisterLoginPage()).click();
+        driver.findElement(Getters.getTabEntranceFacebookRegister()).click();
+    }
+
+    public String getText(By element){
+        return driver.findElement(element).getText();
     }
 }

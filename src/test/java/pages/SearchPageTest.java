@@ -1,11 +1,9 @@
 package pages;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import olxproject.interfacepage.Getters;
 import olxproject.pages.SearchPage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -13,12 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 public class SearchPageTest {
 
-    private WebDriver driver;
-    private SearchPage searchPage;
+    public WebDriver driver;
+    public SearchPage searchPage;
 
     @BeforeClass
     public static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
+        WebDriverManager.firefoxdriver();
     }
 
     @Before
@@ -31,15 +29,82 @@ public class SearchPageTest {
     }
 
     @Test
-    public void searchCookBookInKiev(){
-        searchPage.headerSearch("Кулинарная книга");
-        searchPage.closeAlertWindowSearchPage();
-        searchPage.specificCity("Киев");
-        searchPage.submitSearch();
-        searchPage.checkBoxSearchOnlyByPhoto(true);
-        searchPage.forDefiningSortingCriteria("Самые дешевые");
-        searchPage.nextPageNumber(4);
+    public void headerSearch(){
+        searchPage.headerSearchOnSearchPage("Iphone");
     }
+
+    @Test
+    public void changeLanguage(){
+        searchPage.changeLanguage("мова");
+    }
+
+    @Test
+    public void searchWholeCountry(){
+        searchPage.wholeCountry();
+    }
+
+    @Test
+    public void clickButtonPostAn(){
+        searchPage.clickButtonPostAn();
+    }
+
+    @Test
+    public void clickHeaderLogo(){
+        searchPage.clickOnHeaderLogoPage();
+        String text = searchPage.getText(Getters.getHeaderLogoBasePage());
+        Assert.assertEquals(text,"На главную OLX - бесплатные объявления");
+    }
+
+    @Test
+    public void clickButtonInMyProfile(){
+        searchPage.clickButtonMyProfile();
+    }
+
+    @Test
+    public void checkHeadingCategory(){
+        searchPage.checkHeadingSearchPage("Электроника");
+    }
+
+    @Test
+    public void checkBoxDelivery(){
+        searchPage.checkBoxSearchByDeliverySearchPage(true);
+    }
+
+    @Test
+    public void checkBoxPhoto(){
+        searchPage.checkBoxSearchOnlyByPhotoSearchPage(true);
+    }
+
+    @Test
+    public void checkBoxDescriptionTitle(){
+        searchPage.checkBoxSearchInDescriptionTitleSearchPage(true);
+    }
+
+    @Test
+    public void checkPriceFrom(){
+        searchPage.priceFromSearchPage(500);
+    }
+
+    @Test
+    public void checkPriceTo(){
+        searchPage.priceToSearchPage(1000);
+    }
+
+    @Test
+    public void checkPriceFromAndTo(){
+        searchPage.priceFromAndTo(100, 1000);
+    }
+
+    @Test
+    public void viewAllProduct(){
+        searchPage.viewAllProductsOnTheSearchPage();
+    }
+
+    @Test
+    public void nextPage(){
+        searchPage.nextPageButtonOnSearchPage(true);
+    }
+
 
     @After
     public void testDown(){

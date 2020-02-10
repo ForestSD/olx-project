@@ -1,197 +1,97 @@
 package olxproject.interfacepage;
 
-import olxproject.enumcategoris.CategoriesId;
-import org.openqa.selenium.By;
+import olxproject.pages.LoginPage;
+import olxproject.pages.MainPage;
+import olxproject.pages.SearchPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
-import java.util.List;
-
-public class OlxManager extends BasePage implements Methods {
-    private WebDriver driver;
+public class OlxManager {
+    public WebDriver driver;
 
     public OlxManager(WebDriver driver) {
-        super(driver);
+        this.driver = driver;
     }
 
-    private Getters getters = new Getters();
-    private BasePage basePage;
+    public BasePage basePage;
+    public MainPage mainPage;
+    public LoginPage loginPage;
+    public SearchPage searchPage;
 
-    public void closeAlertWindowMainPage(){
-        this.visibilityElementOnPageBySelector(getters.getAlertElementCloseWindowMainPage());
+
+
+    public void searchProductByCity(String city,String product){
+        mainPage.checkForAlert();
+        mainPage.specificCity(city);
+        mainPage.headerSearchMainPage(product);
     }
 
-    public void headerSearchMainPage(String product){
-        WebElement element = basePage.findElementBy(getters.getFieldSearchMainPage());
-        element.click();
-        element.sendKeys(product);
-        this.submitSearchMainPage();
+    public void searchProductWholeCountry(String product){
+        mainPage.checkForAlert();
+        mainPage.wholeCountry();
+        mainPage.headerSearchMainPage(product);
     }
 
-    public void checkForAlert(){
-        this.clickOnHeaderLogoPage();
-        this.closeAlertWindowMainPage();
+    public void enterOnLoginPage(){
+        mainPage.clickButtonPostAn();
     }
 
-    public void submitSearchMainPage(){
-        driver.findElement(getters.getButtonSearchMainMainPage()).click();
+    public void searchProductByCategoris(String categorie, String subCategorie){
+        mainPage.listCategoriesOnMainPage(categorie, subCategorie);
     }
 
-    public void listCategoriesOnMainPage(String nameOfCategories, String locator){
-        List<WebElement> elements = driver.findElements(getters.getMainCategoriesMainPage());
-        for (WebElement element : elements){
-            String text = element.getText();
-            if(text.equalsIgnoreCase(nameOfCategories)) {
-                element.click();
-                CategoriesId byName = CategoriesId.getByName(nameOfCategories);
-                pageLocator(byName.giveId(),locator);
-                break;
-            }
-        }
+
+    public void searchProductAndCheckingCheckBoxSearchPage(String product){
+        mainPage.headerSearchMainPage(product);
+        searchPage.headerSearch(product);
+        searchPage.closeAlertWindowSearchPage();
     }
 
-    public void submitSearchOnSearchPage() {
-        basePage.clickElement(getters.getSubmitSearchPage());
+    public void checkBoxActivateSearchPage(String product, boolean delivery,boolean descriptionTitle, boolean photo){
+        mainPage.headerSearchMainPage(product);
+        searchPage.checkBoxSearchByDeliverySearchPage(delivery);
+        searchPage.checkBoxSearchInDescriptionTitleSearchPage(descriptionTitle);
+        searchPage.checkBoxSearchOnlyByPhotoSearchPage(photo);
     }
 
-    public void headerSearchOnSearchPage(String product) {
-        basePage.sendKeysElement(getters.getFieldSearchOnSearchPage(),product);
-        submitSearchOnSearchPage();
+    public void additionalSettingsSearchPage(String product, String criteria, String nameAdvert, String nameCurrency, String nameView){
+        mainPage.headerSearchMainPage(product);
+        searchPage.forDefiningSortingCriteriaSearchPage(criteria);
+        searchPage.forDeterminingFromWhomTheAdWasSubmittedSearchPage(nameAdvert);
+        searchPage.forDeterminingTheCurrencySearchPage(nameCurrency);
+        searchPage.forDisplayingGoodsSearchPage(nameView);
     }
 
-    public void checkHeadingSearchPage(String nameCategoryOnList){
-        Actions actions = new Actions(driver);
-        actions.moveToElement(driver.findElement(getters.getCategoriesHeadingSearchPage())).click().perform();
-        WebElement elementCategoryList = driver.findElement(By.xpath(String.format(getters.getLocatorCheckHeading(),nameCategoryOnList)));
-        elementCategoryList.click();
+    public void buttonAndNumberPage(String product, boolean nextButton, boolean previousButton){
+        mainPage.headerSearchMainPage(product);
+        searchPage.nextPageButtonOnSearchPage(nextButton);
+        searchPage.previousPageButtonOnSearchPage(previousButton);
     }
 
-    public void closeAlertWindowSearchPage(){
-        visibilityElementOnPageBySelector(getters.getBoxCloseAlertWindowSearchPage());
+
+
+    public void changeLanguageOnPageByLoginPage(String lang){
+        mainPage.clickButtonPostAn();
+        basePage.changeLanguage(lang);
     }
 
-    public void checkBoxSearchInDescriptionTitleSearchPage(boolean search){
-        checkBoxSearch(search,getters.getOnlyDescriptionTitleSearchPage());
+    public void enterByLogin(String user, String pass ){
+        mainPage.clickButtonPostAn();
+        loginPage.tabToEntrance(user, pass);
     }
 
-    public void checkBoxSearchOnlyByPhotoSearchPage(boolean photo){
-        checkBoxSearch(photo,getters.getOnlyPhotoSearchPage());
+    public void enterByRegister(String phoneOrEmail){
+        mainPage.clickButtonPostAn();
+        loginPage.tabToRegister(phoneOrEmail);
     }
 
-    public void checkBoxSearchByDeliverySearchPage(boolean delivery){
-        checkBoxSearch(delivery,getters.getOnlyDeliverySearchPage());
+    public void enterByLoginFaceBook(){
+        mainPage.clickButtonPostAn();
+        loginPage.tabToEntranceFacebookLogin();
     }
 
-    private void priceFromSearchPage(Integer price){
-        pricing(price,getters.getButtonFromPriceSearchPage(),getters.getInputFromPriceSearchPage());
+    public void enterByRegisterFaceBook(){
+        mainPage.clickButtonPostAn();
+        loginPage.tabToEntranceFacebookRegister();
     }
 
-    private void priceToSearchPage(Integer price){
-        pricing(price,getters.getButtonToPriceSearchPage(), getters.getInputToPriceSearchPage());
-    }
-
-    public void priceFromAndTo(Integer variablePriceFrom, Integer variablePriceTo){
-        this.priceFromSearchPage(variablePriceFrom);
-        this.priceToSearchPage(variablePriceTo);
-    }
-
-    /**
-     * Все
-     * Частное
-     * Бизнес
-     **/
-    public void forDeterminingFromWhomTheAdWasSubmittedSearchPage(String nameAdvert){
-        sortListByName(nameAdvert, getters.getListAdvertSearchPage());
-    }
-
-    /**
-     * Самые новые
-     * Самые дешевые
-     * Самые дорогие
-     **/
-    public void forDefiningSortingCriteriaSearchPage(String nameCriteria){
-        sortListByName(nameCriteria,getters.getListByTheCriteriaSearchPage());
-    }
-
-    /**
-     * грн
-     * $
-     * €
-     **/
-    public void forDeterminingTheCurrencySearchPage(String nameCurrency){
-        sortListByName(nameCurrency, getters.getListCurrencySearchPage());
-    }
-
-    /**
-     * Список
-     * Галерея
-     **/
-    public void forDisplayingGoodsSearchPage(String nameView){
-        sortListByName(nameView,getters.getListViewSearchPage());
-    }
-
-    public void viewAllProductsOnTheSearchPage(){
-        basePage.clickElement(getters.getViewAllProductSearchPage());
-    }
-
-    public void nextPageNumberOnSearchPage(Integer numberPage){
-        javaScriptExecutorScrollPage();
-        waitSecond(3);
-        visibilityElementOnPageBySelector(getters.getBoxCloseCookieWindowSearchPage());
-        List<WebElement> elementsPager = driver.findElements(getters.getNextNumberSearchPage());
-        for (WebElement page : elementsPager) {
-            String text = page.getText();
-            String stringNumberPage = numberPage.toString();
-            if(stringNumberPage.equals(text)){
-                page.click();
-                break;
-            }
-        }
-
-    }
-
-    public void nextPageButtonOnSearchPage(boolean nextPage){
-        switchingPage(nextPage, getters.getNextButtonSearchPage());
-    }
-
-    public void previousPageButtonOnSearchPage(boolean previousPage){
-        switchingPage(previousPage,getters.getPreviousButtonSearchPage());
-    }
-
-    public void tabToEntrance(String userEmailOrNumberPhone, String userPass){
-        basePage.clickElement(getters.getTabEntranceLoginPage());
-        basePage.sendKeysElement(getters.getFieldUserEmailLogin(), userEmailOrNumberPhone);
-        basePage.clickElement(getters.getFieldUserPassLogin());
-        basePage.sendKeysElement(getters.getFieldUserPassLogin(),userPass);
-        basePage.submitElement(getters.getButtonSubmitEntranceLogin());
-    }
-
-    public void tabToRegister(String userEmailOrNumberPhone){
-        basePage.clickElement(getters.getTabRegisterLoginPage());
-        basePage.sendKeysElement(getters.getFieldUserEmailPhoneRegister(),userEmailOrNumberPhone);
-        basePage.clickElement(getters.getCheckBoxArgumentRegister());
-        basePage.submitElement(getters.getButtonSubmitRegister());
-    }
-
-    public void tabToEntranceFacebookLogin(){
-        basePage.clickElement(getters.getTabEntranceLoginPage());
-        basePage.clickElement(getters.getTabEntranceFacebookLogin());
-    }
-
-    public void tabToEntranceFacebookRegister(){
-        basePage.clickElement(getters.getTabRegisterLoginPage());
-        basePage.clickElement(getters.getTabEntranceFacebookRegister());
-    }
-
-    @Override
-    public void headerSearch(String product) {
-        driver.findElement(getters.getFieldSearchOnSearchPage()).sendKeys(product);
-        submitSearch();
-    }
-
-    @Override
-    public void submitSearch() {
-        driver.findElement(getters.getSubmitSearchPage()).click();
-    }
 }

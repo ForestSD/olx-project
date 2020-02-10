@@ -10,43 +10,42 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public abstract class BasePage extends Getters {
+public abstract class BasePage  {
 
-    private WebDriver driver;
+    public WebDriver driver;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 
-    private Getters getters = new Getters();
 
 
     public void clickOnHeaderLogoPage(){
-        clickElement(getters.getHeaderLogoBasePage());
+        clickElement(Getters.getHeaderLogoBasePage());
     }
 
     public void clickButtonPostAn(){
-        clickElement(getters.getButtonPostAnBasePage());
+        clickElement(Getters.getButtonPostAnBasePage());
         new LoginPage(driver);
     }
 
     public void clickButtonMyProfile(){
-        clickElement(getters.getMyProfileBasePage());
+        clickElement(Getters.getMyProfileBasePage());
         new LoginPage(driver);
     }
 
     public void changeLanguage(String language){
-        List<WebElement> elements = driver.findElements(getters.getLanguageOnBasePage());
+        List<WebElement> elements = driver.findElements(Getters.getLanguageOnBasePage());
         iterateElement(elements,language);
     }
 
     public void specificCity(String location){
-        sendKeysElement(getters.getSearchAreaBasePage(),location);
+        sendKeysElement(Getters.getSearchAreaBasePage(),location);
     }
 
     public void wholeCountry(){
-        clickElement(getters.getSearchAreaBasePage());
-        clickElement(getters.getWholeCountryBasePage());
+        clickElement(Getters.getSearchAreaBasePage());
+        clickElement(Getters.getWholeCountryBasePage());
     }
 
     protected void sortListByName(String name, By list){
@@ -70,14 +69,23 @@ public abstract class BasePage extends Getters {
         }
     }
 
+    public void checkForAlert(){
+        this.clickOnHeaderLogoPage();
+        this.closeAlertWindowMainPage();
+    }
+
+    public void closeAlertWindowMainPage(){
+        this.visibilityElementOnPageBySelector(Getters.getAlertElementCloseWindowMainPage());
+    }
+
     protected void pageLocator(String name, String locator){
-        List<WebElement> elements = driver.findElements(By.xpath(String.format(getters.getLocalCategoriesString(), name)));
+        List<WebElement> elements = driver.findElements(By.xpath(String.format(Getters.getLocalCategoriesString(), name)));
         iterateElement(elements,locator);
     }
 
     protected void javaScriptExecutorScrollPage(){
-        WebElement webElement = findElementBy(getters.getDownElementOnPage());
-        ((JavascriptExecutor)driver).executeScript(getters.getScrollOnDownPage(), webElement);
+        WebElement webElement = findElementBy(Getters.getDownElementOnPage());
+        ((JavascriptExecutor)driver).executeScript(Getters.getScrollOnDownPage(), webElement);
     }
 
     protected void visibilityElementOnPageBySelector(By selector){
@@ -97,9 +105,11 @@ public abstract class BasePage extends Getters {
     }
 
     protected void pricing(Integer price, By selectorButton, By selectorInput){
-        String stringPrice = price.toString();
-        clickElement(selectorButton);
-        sendKeysElement(selectorInput,stringPrice);
+        try {
+            String stringPrice = price.toString();
+            clickElement(selectorButton);
+            sendKeysElement(selectorInput, stringPrice);
+        }catch (Exception e){}
 
     }
 
@@ -120,7 +130,7 @@ public abstract class BasePage extends Getters {
                 waitSecond(2);
                 javaScriptExecutorScrollPage();
                 waitSecond(1.5);
-                visibilityElementOnPageBySelector(getters.getBoxCloseCookieWindowSearchPage());
+                visibilityElementOnPageBySelector(Getters.getBoxCloseCookieWindowSearchPage());
                 this.clickElement(selector);
             }
         }catch (Exception e){
@@ -138,17 +148,21 @@ public abstract class BasePage extends Getters {
         }
     }
 
-    protected void clickElement(By selector){
+    public String getText(By element){
+        return driver.findElement(element).getText();
+    }
+
+    public void clickElement(By selector){
         driver.findElement(selector).click();
     }
 
-    protected WebElement findElementBy(By selector){
+    public WebElement findElementBy(By selector){
         return driver.findElement(selector);
     }
 
-    protected void sendKeysElement(By selector, String key){
+    public void sendKeysElement(By selector, String key){
         driver.findElement(selector).sendKeys(key);
     }
 
-    protected void submitElement(By selector){ driver.findElement(selector).submit();}
+    public void submitElement(By selector){ driver.findElement(selector).submit();}
 }
