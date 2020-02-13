@@ -6,16 +6,18 @@ import olxproject.pages.SearchPage;
 import org.openqa.selenium.WebDriver;
 
 public class OlxManager {
+
     public WebDriver driver;
+    private MainPage mainPage;
+    private LoginPage loginPage;
+    private SearchPage searchPage;
 
     public OlxManager(WebDriver driver) {
         this.driver = driver;
+        mainPage = new MainPage(driver);
+        loginPage = new LoginPage(driver);
+        searchPage = new SearchPage(driver);
     }
-
-    public BasePage basePage;
-    public MainPage mainPage;
-    public LoginPage loginPage;
-    public SearchPage searchPage;
 
 
 
@@ -71,7 +73,7 @@ public class OlxManager {
 
     public void changeLanguageOnPageByLoginPage(String lang){
         mainPage.clickButtonPostAn();
-        basePage.changeLanguage(lang);
+        mainPage.changeLanguage(lang);
     }
 
     public void enterByLogin(String user, String pass ){

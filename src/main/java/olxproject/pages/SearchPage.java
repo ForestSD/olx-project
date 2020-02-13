@@ -113,7 +113,8 @@ public class SearchPage extends BasePage {
             String text = page.getText();
             String stringNumberPage = numberPage.toString();
             if(stringNumberPage.equals(text)){
-                page.click();
+                String href = page.getAttribute("href");
+                driver.get(href);
                 break;
             }
         }

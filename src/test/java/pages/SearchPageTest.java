@@ -28,6 +28,7 @@ public class SearchPageTest {
         searchPage = new SearchPage(driver);
     }
 
+
     @Test
     public void headerSearch(){
         searchPage.headerSearchOnSearchPage("Iphone");
@@ -103,6 +104,11 @@ public class SearchPageTest {
     @Test
     public void nextPage(){
         searchPage.nextPageButtonOnSearchPage(true);
+    }
+
+    @Test
+    public void nextPageNumber(){
+        searchPage.nextPageNumberOnSearchPage(9);
     }
 
 
